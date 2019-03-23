@@ -2,13 +2,14 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- <link href='style.css' rel='stylesheet' type='text/css'> -->
 	<title>My beautiful website</title>
 	<style>
 	html {
 		box-sizing: border-box;
 	}
 	.main {
+		text-align: center;
 		width: 80%;
 		height: 100%;
 		border: 1px solid navy;
@@ -24,7 +25,7 @@
 		margin-right: 5%;
 	}
 	.right-content {
-		width: 50%;
+		width: 65%;
 		height: 100%;
 		float: left;
 
@@ -58,12 +59,18 @@
 		float: left;
 	}
 
-	@media (min-width: 780px) and (max-width: 1024px) {
+	@media (max-width: 1024px) and (min-width: 512px){
 		.right-content {
 			clear: both;
+			border-bottom: 10px;
+			position: relative;
+			padding-top: 5%;
 		}
 		.contact {
 			visibility: hidden;
+		}
+		.left-content {
+			height: 250px;
 		}
 	}
 
