@@ -2,6 +2,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<!-- <link href='style.css' rel='stylesheet' type='text/css'> -->
 	<title>My beautiful website</title>
 	<style>
@@ -21,13 +22,15 @@
 	.left-content {
 		width: 250px;
 		float: left;
-		margin-right: 5%;
+		/*margin-right: 3%;*/
 	}
 	.right-content {
-		width: 65%;
+		width: calc(100% - 350px);
 		height: 100%;
-		float: left;
-
+		float: right;
+		box-sizing: border-box;
+		position: relative;
+		/*margin-right: 3%;*/
 	}
 	.block {
 		position: relative;
@@ -53,23 +56,49 @@
 		height: 100%;
 	}
 	.contact {
-		width: 250px;
-		height: 100px;
+		/*width: 250px;*/
+		width: 100%;
+		height: auto;
 		float: left;
 	}
 
 	@media (max-width: 1024px) and (min-width: 512px){
 		.right-content {
 			clear: both;
-			border-bottom: 10px;
+			/*border-bottom: 10px;*/
 			position: relative;
 			padding-top: 5%;
+			float: left;
+			width: 100%;
+			box-sizing: border-box;
+			margin: 0px auto;
+			/*padding-right: 5%;*/
+
+		}
+		.block {
+			clear: both;
+			margin: 0px auto;
+			padding: 5%;
+
 		}
 		.contact {
 			visibility: hidden;
 		}
 		.left-content {
+			/*clear: both;*/
 			height: 250px;
+			width: 100%;
+			/*float:left;*/
+			/*align-items: center;*/
+			margin: auto;
+		}
+
+		.photo {
+			/*clear: both;*/
+			/*width: 100%;*/
+			/*left: 50%;*/
+			float: none;
+			margin: 3% auto;
 		}
 	}
 
