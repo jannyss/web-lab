@@ -1,4 +1,3 @@
-// var img1 = new Image();
 var IMG_WIDTH = 350, IMG_HEIGHT = 250;
 var CANVAS_WIDTH = 700, CANVAS_HEIGHT = 500;
 
@@ -19,9 +18,10 @@ var generateBtn = document.createElement("button");
 generateBtn.id = "generateBtn";
 generateBtn.innerText = "Generate pic";
 generateBtn.onclick = function () {
-    generatePic();
+    generateCollage();
 };
-par.appendChild(generateBtn);document.createElement("button");
+par.appendChild(generateBtn);
+document.createElement("button");
 
 var downloadBtn = document.createElement("button");
 downloadBtn.id = "downloadBtn";
@@ -34,6 +34,10 @@ downloadBtn.onclick = function () {
 par.appendChild(downloadBtn);
 
 
+var picsIsReady = false;
+var textIsReady = false;
+var preparedText = "";
+
 function getRandomInt() {
     return Math.floor(Math.random() * (10000 - 10000000) + 1);
 }
@@ -42,18 +46,6 @@ function downloadPic() {
     canvas.toDataURL("image/jpg");
 }
 
-function getImage() {
-    var img = new Image();
-    var picUrl = "https://source.unsplash.com/collection/" + getRandomInt() + "/350x250";
-    img.crossOrigin = ' Anonymous';
-
-    var request = new XMLHttpRequest();
-    request.open("GET", picUrl, true);
-    request.send(null);
-    img.src = picUrl;
-    alert(request.getResponseHeader("content-type"));
-
-}
 
 function generatePic() {
     var imgs = [];
@@ -62,7 +54,7 @@ function generatePic() {
 
 function getImages(imgs) {
 
-    ctx.fillStyle = '#6eb78b';
+    ctx.fillStyle = '#88b7b2';
     ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
     ctx.fillStyle = '#000000';
     ctx.font = "30px Arial";
@@ -81,6 +73,7 @@ function getImages(imgs) {
         if (imgs.length < 4) {
             getImages(imgs);
         } else {
+            picIsReady = true;
             drawImages(imgs);
         }
     }.bind(this);
@@ -95,8 +88,36 @@ function drawImages(imgs) {
         // imgs[i].src = src + "?random=" + getRandomInt();
         ctx.drawImage(imgs[i], i % 2 * IMG_WIDTH, Math.floor((i + 1) / 3) * IMG_HEIGHT, IMG_WIDTH, IMG_HEIGHT);
     }
+    picsIsReady = true;
+    drawText();
+
 }
 
-generatePic();
+function drawText() {
+    if (picsIsReady && textIsReady) {
+        ctx.fillStyle = "rgb(254,254,254)";
+        ctx.fillText(preparedText, CANVAS_WIDTH / 2.5, CANVAS_HEIGHT / 2);
+    }
+}
 
+function getText() {
+    var url = 'https://cors-anywhere.herokuapp.com/https://api.forismatic.com/api/1.0/?method=getQuote&format=text&lang=ru';
+    var request = new XMLHttpRequest();
+    request.open("GET", url, true);
+    request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+    request.onload = function () {
+        textIsReady = true;
+        preparedText = request.responseText;
+    };
+    request.send(null);
 
+}
+
+function generateCollage() {
+    picsIsReady = false;
+    textIsReady = false;
+    generatePic();
+    getText();
+}
+
+generateCollage();
