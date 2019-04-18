@@ -23,29 +23,36 @@ generateBtn.onclick = function () {
 par.appendChild(generateBtn);
 document.createElement("button");
 
+var downloadHrefTag = document.createElement("a");
+downloadHrefTag.id = "download";
+downloadHrefTag.href = "";
+downloadHrefTag.download = "image.jpg";
+downloadHrefTag.onclick = function () {
+    downloadPic(this);
+};
+par.appendChild(downloadHrefTag);
+
 var downloadBtn = document.createElement("button");
 downloadBtn.id = "downloadBtn";
-downloadBtn.download = "image.jpg";
 downloadBtn.href = "";
 downloadBtn.innerText = "Download pic";
-downloadBtn.onclick = function () {
-    downloadPic();
-};
-par.appendChild(downloadBtn);
+downloadHrefTag.appendChild(downloadBtn);
 
 
 var picsIsReady = false;
 var textIsReady = false;
 var preparedText = "";
+var padding = 10;
+var lineSpace = 20;
+var lines;
 
 function getRandomInt() {
     return Math.floor(Math.random() * (10000 - 10000000) + 1);
 }
 
-function downloadPic() {
-    canvas.toDataURL("image/jpg");
+function downloadPic(el) {
+    el.href = canvas.toDataURL("image/jpg");
 }
-
 
 function generatePic() {
     var imgs = [];
@@ -53,12 +60,13 @@ function generatePic() {
 }
 
 function getImages(imgs) {
-
-    ctx.fillStyle = '#88b7b2';
-    ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
     ctx.fillStyle = '#000000';
-    ctx.font = "30px Arial";
-    ctx.fillText("Waiting ... ", CANVAS_WIDTH / 2.5, CANVAS_HEIGHT / 2);
+    ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+    ctx.fillStyle = '#84ffeb';
+    ctx.font = "30px Comic Sans MS";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("Waiting ... ", CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2);
 
 
     var img = new Image();
@@ -77,26 +85,28 @@ function getImages(imgs) {
             drawImages(imgs);
         }
     }.bind(this);
-
 }
 
 function drawImages(imgs) {
-
+    ctx.fillStyle = '#000000';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
     for (var i = 0; i < 4; i++) {
-        // alert(imgs[i].src);
-        // var src = imgs[i].src;
-        // imgs[i].src = src + "?random=" + getRandomInt();
+        ctx.globalAlpha = 0.4;
         ctx.drawImage(imgs[i], i % 2 * IMG_WIDTH, Math.floor((i + 1) / 3) * IMG_HEIGHT, IMG_WIDTH, IMG_HEIGHT);
     }
+    ctx.globalAlpha = 1;
     picsIsReady = true;
-    drawText();
+    drawText(lines);
 
 }
 
-function drawText() {
+function drawText(lines) {
     if (picsIsReady && textIsReady) {
-        ctx.fillStyle = "rgb(254,254,254)";
-        ctx.fillText(preparedText, CANVAS_WIDTH / 2.5, CANVAS_HEIGHT / 2);
+        ctx.fillStyle = "#fefefe";
+        for (var i = 0; i < lines.length; i++) {
+            ctx.fillText(lines[i], (CANVAS_WIDTH / 2), (CANVAS_HEIGHT / 2.5) + i * (padding + lineSpace));
+        }
+        // ctx.fillText(preparedText, CANVAS_WIDTH / 2.5, CANVAS_HEIGHT / 2);
     }
 }
 
@@ -106,14 +116,33 @@ function getText() {
     request.open("GET", url, true);
     request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
     request.onload = function () {
-        textIsReady = true;
         preparedText = request.responseText;
+        prepareText();
     };
     request.send(null);
+}
 
+
+function prepareText() {
+    var words = preparedText.split(" ");
+    var currentLine = words[0];
+    // ctx.fillStyle = "white";
+
+    for (var i = 1; i < words.length; i++) {
+        var width = ctx.measureText(currentLine + " " + words[i]).width;
+        if (width < CANVAS_WIDTH - (2 * padding)) {
+            currentLine += " " + words[i];
+        } else {
+            lines.push(currentLine);
+            currentLine = words[i];
+        }
+    }
+    lines.push(currentLine);
+    textIsReady = true;
 }
 
 function generateCollage() {
+    lines = [];
     picsIsReady = false;
     textIsReady = false;
     generatePic();
