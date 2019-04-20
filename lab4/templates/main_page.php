@@ -1,13 +1,5 @@
 <?php include "include/functions.php" ?>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>The best news!</title>
-</head>
-<body>
-<div>
+<?php include "templates/header.php" ?>
     <?php
     $articles = fetchArticles();
     while ($row = $articles->fetch_assoc()) {
@@ -23,6 +15,4 @@
         echo $content;
     }
     ?>
-</div>
-</body>
-</html>
+<?php include "templates/footer.php" ?>

@@ -1,15 +1,10 @@
 <?php include "include/functions.php" ?>
+<?php include "templates/header.php" ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>The best news for ADMIN!</title>
-</head>
-<body>
-<div>
+    <a href="create.php">Create new article</a>
     <?php
     $articles = fetchArticles();
+
     while ($row = $articles->fetch_assoc()) {
 
         $content = "<div>
@@ -21,12 +16,12 @@
                         </div>
                         <form action='delete.php' method='post'>
                             <input type='hidden' value='{$row['id']}' name='article_id'>
+                            <input type='hidden' value='{$row['title']}' name='article_title'>
                             <button type='submit'>Delete</button>
                         </form>
                     </div>";
         echo $content;
     }
     ?>
-</div>
-</body>
-</html>
+
+    <?php include "templates/footer.php" ?>
